@@ -1,8 +1,11 @@
 #include <stdio.h>
 
 int main (){
-    printf("teste\n");
     
+
+    int numero;
+    scanf("%d", &numero);
+    printf("%d", numero);
 
     return 0;
 }
