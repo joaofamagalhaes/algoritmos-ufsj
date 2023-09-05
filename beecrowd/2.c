@@ -2,11 +2,14 @@
 
 int main (){
     
-
-    int numero;
-    scanf("%d", &numero);
-    printf("%d", numero);
-
+    printf("---------------------------------------\n");
+    printf("|                                     |\n");
+    printf("|                                     |\n");
+    printf("|                                     |\n");
+    printf("|                                     |\n");
+    printf("|                                     |\n");
+    printf("---------------------------------------\n");
+    
     return 0;
 }
 
