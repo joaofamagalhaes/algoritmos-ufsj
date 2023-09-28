@@ -1,13 +1,10 @@
 #include <stdio.h>
 
 int main() {
+    
     int a, b, c;
-
-    scanf("%d", &a);
-    scanf("%d", &b);
-    scanf("%d", &c);
-
-   
+    scanf("%d %d %d", &a, &b, &c);
+    
     if (a > b) {
         int temp = a;
         a = b;
@@ -23,7 +20,6 @@ int main() {
         a = b;
         b = temp;
     }
-
     printf("%d\n%d\n%d\n", a, b, c);
     printf("\n%d\n%d\n%d\n", a, b, c);
 
