@@ -2,16 +2,12 @@
 
 int main (){
 
-    int f, c;
-    scanf("%d", &f);
-    c = f;
-    for (int i = c; i >= 0; i++)
-    {
-          f = f * (f - 1);
-          c--;
-         
-    }
-     printf("%d\n", f);
+    float x = 3.0f;
+    float y = 2.0f;
     
+    int z = (x < y);
+    if(!z){
+        printf("%.2f\n", x);
+    }
     return 0;
 }
