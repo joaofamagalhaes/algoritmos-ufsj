@@ -1,37 +1,29 @@
 #include <stdio.h>
 
-int main()
-{
+int somaImpares(int x, int y){
+        int soma = 0; 
+            for (int i = x + 1; i < y; i++){
+                if (i % 2 != 0){
+                    soma = i + soma;
+                }
+            }    
+         
+        return soma; 
+    }
 
-    int quant, x, y, soma = 0;
+int main(){
+
+    int quant, x, y;
 
     scanf("%d", &quant);
-
-    for (int t = 0; t < quant; t++)
-    {
+     for (int t = 0; t < quant; t++){
         scanf("%d %d", &x, &y);
-        if (x > y)
-        {
-            for (int i = x + 1; i < y; i++)
-            {
-                if (i % 2 == 1)
-                {
-                    soma = i + soma;
-                    printf("%d\n", soma);
-                }
+            if (x < y){ 
+            printf("%d\n", somaImpares(x, y));
+            } else{
+            printf("%d\n", somaImpares(y, x));
             }
         }
-        else
-        {
-            for (int i = x + 1; i < y; i++)
-            {
-                if (i % 2 == 1)
-                {
-                    soma = i + soma;
-                    printf("%d\n", soma);
-                }
-            }
-        }
-
+  
         return 0;
     }
