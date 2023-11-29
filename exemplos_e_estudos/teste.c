@@ -1,32 +1,26 @@
 #include <stdio.h>
-int main()
-{
-    int N, X, Y, a, b, c, d, e;
-    scanf("%d", &N);
-    for(a=1; a<=N; a++)
-    {
-        scanf("%d %d", &X, &Y);
-        if(X%2==1)
-        {
-            c=0;
-            for(b=1; b<=Y; b++)
-            {
-                c+=X;
-                X+=2;
-            }
-            printf("%d\n", c);
-        }
-        else
-        {
-            X++;
-            c=0;
-            for(b=1; b<=Y; b++)
-            {
-                c+=X;
-                X+=2;
-            }
-            printf("%d\n", c);
+
+#include <stdio.h>
+
+int main() {
+    // Declarar a matriz 5x5
+    int matriz[5][5];
+
+    // Preencher a matriz com 0 e a diagonal principal com 1
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            matriz[i][j] = (i == j) ? 1 : 0;
         }
     }
+
+    // Imprimir a matriz resultante
+    printf("Matriz resultante:\n");
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            printf("%d ", matriz[i][j]);
+        }
+        printf("\n");
+    }
+
     return 0;
 }
