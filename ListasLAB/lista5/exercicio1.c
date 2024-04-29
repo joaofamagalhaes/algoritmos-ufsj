@@ -1,12 +1,12 @@
 #include <stdio.h>
 
 int main (){
-    int x, y;
-    for (x = 1; x < 1001; x++){
-        if (x % 7 == 0){
-            y++;
-        }
+
+    int cont = 0;
+    for (int i = 0; i <= 1000; i++){ 
+        if (i % 7 == 0) cont++;
     }
-    printf("%d vezes\n", y);
+
+    printf("%d vezes\n", cont);
     return 0;
 }

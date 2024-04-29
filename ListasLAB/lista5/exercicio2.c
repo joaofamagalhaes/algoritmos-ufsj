@@ -1,12 +1,16 @@
 #include <stdio.h>
 
 int main (){
+    
+    int num;
 
-    int num, x = 0;
-    scanf("Digite o numero: %d", &num); 
-    while (x < num){
-        x++;
-        printf("%d\n", x);
+    printf("Digite um numero: \n");
+    scanf("%d", &num);
+
+    for (int i = num; i >= 0; i--){
+        printf("%d ", i);
     }
+    printf("\n");
+
     return 0;
 }
