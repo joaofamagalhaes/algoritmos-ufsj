@@ -9,7 +9,7 @@ int maior_primo (int x, int y){
 
         }
     }
-}
+
 
 int main (){
 
