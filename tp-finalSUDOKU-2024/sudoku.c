@@ -11,6 +11,7 @@ void criaPuzzle();
 void imprimePuzzle();
 int ehValido();
 int resolucaoSudoku();
+void novoJogo();
 
 // inicializa um puzzle de forma aleatoria
 void criaPuzzle()
@@ -46,6 +47,7 @@ void criaPuzzle()
 void imprimePuzzle()
 {
     printf("-------------------------------\n");
+
     for (int i = 0; i < 9; i++)
     {
         printf("|");
@@ -58,6 +60,7 @@ void imprimePuzzle()
                 printf("|");
             }
         }
+        // imprime uma divisao a cada tres linhas
         printf("\n");
         if ((i + 1) % 3 == 0)
         {
@@ -138,12 +141,82 @@ int resolucaoSudoku(int linha, int coluna)
     return 0;
 }
 
+// funcao que imprime o menu principal e da as opcoes
+int menuPrincipal()
+{
+    int num;
+
+    printf("\n                    MENU PRINCIPAL    \n");
+    printf("            -------------------------------\n");
+    printf("       Digite o numero relacionado a opcao desejada:   \n");
+    printf("            -------------------------------\n");
+
+    printf("                1 - iniciar novo jogo\n");
+    printf("                2 - jogo salvo\n");
+    printf("                3 - melhores tempos\n");
+    printf("                4 - sair\n");
+
+    scanf("%d", &num);
+
+    switch (num)
+    {
+    case 1:
+        novoJogo();
+        break;
+    case 2:
+        break;
+    case 3:
+        break;
+    case 4:
+        return 1;
+        break;
+
+    default:
+        printf("Opcao invalida!");
+        menuPrincipal();
+    }
+}
+
+void novoJogo()
+{
+    int resposta, linha, coluna;
+
+    printf("Salvar jogo");
+    printf("Selecionar numero a ser preenchido");
+    switch (resposta)
+    {
+    case 1:
+    case 2:
+
+    default:
+        break;
+    }
+    imprimePuzzle();
+
+    printf("\nDigite a coluna e a linha que voce deseja alterar: \n");
+    scanf("%d %d", &coluna, &linha);
+
+    if (puzzle[linha][coluna] == 0)
+    {
+        printf("Digite o numero que deseja inserir: \n");
+        scanf("%d", &resposta);
+        puzzle[linha][coluna] = resposta;
+        novoJogo();
+    }
+    else
+    {
+        printf("Posicao invalida!\n");
+        novoJogo();
+    }
+}
+
 int main()
 {
     srand(time(NULL));
 
     criaPuzzle();
-    imprimePuzzle();
+    menuPrincipal();
+    // imprimePuzzle();
 
     return 0;
 }
