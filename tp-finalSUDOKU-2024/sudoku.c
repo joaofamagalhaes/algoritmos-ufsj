@@ -2,16 +2,17 @@
 #include <stdlib.h>
 #include <time.h>
 
-// se tratando das matrizes, cada i em loop é uma coluna enquanto cada j é uma linha//
+// se tratando das matrizes, cada i em loop é uma coluna enquanto cada j é uma linha //
 
 // declaracao de todas as funcoes e variaveis globais:
 int puzzle[9][9];
+FILE *js;
 
 void criaPuzzle();
 void imprimePuzzle();
 int ehValido();
 int resolucaoSudoku();
-void novoJogo();
+int novoJogo();
 
 // inicializa um puzzle de forma aleatoria
 void criaPuzzle()
@@ -144,68 +145,105 @@ int resolucaoSudoku(int linha, int coluna)
 // funcao que imprime o menu principal e da as opcoes
 int menuPrincipal()
 {
-    int num;
+    int resposta;
 
     printf("\n                    MENU PRINCIPAL    \n");
     printf("            -------------------------------\n");
     printf("       Digite o numero relacionado a opcao desejada:   \n");
     printf("            -------------------------------\n");
 
-    printf("                1 - iniciar novo jogo\n");
-    printf("                2 - jogo salvo\n");
-    printf("                3 - melhores tempos\n");
-    printf("                4 - sair\n");
+    printf("                1 - Iniciar novo jogo\n");
+    printf("                2 - Jogo salvo\n");
+    printf("                3 - Melhores tempos\n");
+    printf("                4 - Sair\n");
 
-    scanf("%d", &num);
+    scanf("%d", &resposta);
 
-    switch (num)
+    switch (resposta)
     {
     case 1:
         novoJogo();
         break;
     case 2:
+        js = fopen("jogoSalvo.txt", "r");
+        if (js == NULL)
+            printf("Não foi possivel abrir o jogo salvo!\n");
+        for (int i = 0; i < 9; i++)
+        {
+            for (int j = 0; j < 9; j++)
+            {
+                fscanf(js, "%d", &puzzle[i][j]);
+            }
+        }
+        fclose(js);
+        5 novoJogo();
         break;
     case 3:
         break;
     case 4:
+        printf("Obrigado por jogar!\n");
         return 1;
         break;
-
     default:
         printf("Opcao invalida!");
         menuPrincipal();
     }
 }
 
-void novoJogo()
+int novoJogo()
 {
-    int resposta, linha, coluna;
+    int resposta, linha, coluna, verif;
 
-    printf("Salvar jogo");
-    printf("Selecionar numero a ser preenchido");
+    imprimePuzzle();
+
+    printf("\n1 - Selecionar numero a ser preenchido\n");
+    printf("2 - Verificar\n");
+    printf("3 - Ver resultado\n");
+    printf("4 - Salvar jogo e sair\n");
+    printf("5 - Sair\n");
+
+    scanf("%d", &resposta);
+
     switch (resposta)
     {
     case 1:
-    case 2:
+        printf("\nDigite a coluna e a linha que voce deseja alterar: \n");
+        scanf("%d %d", &coluna, &linha);
 
-    default:
+        if (puzzle[linha][coluna] == 0)
+        {
+            printf("Digite o numero que deseja inserir: \n");
+            scanf("%d", &resposta);
+            puzzle[linha][coluna] = resposta;
+            novoJogo();
+        }
+        else
+        {
+            printf("Posicao invalida!\n");
+            novoJogo();
+        }
         break;
-    }
-    imprimePuzzle();
+    case 4:
+        js = fopen("jogoSalvo.txt", "w");
+        if (js == NULL)
+            printf("Não foi possivel salvar o jogo!\n");
 
-    printf("\nDigite a coluna e a linha que voce deseja alterar: \n");
-    scanf("%d %d", &coluna, &linha);
+        for (int i = 0; i < 9; i++)
+        {
+            for (int j = 0; j < 9; j++)
+            {
+                fprintf(js, " %d ", puzzle[i][j]);
+            }
+        }
+        fclose(js);
 
-    if (puzzle[linha][coluna] == 0)
-    {
-        printf("Digite o numero que deseja inserir: \n");
-        scanf("%d", &resposta);
-        puzzle[linha][coluna] = resposta;
-        novoJogo();
-    }
-    else
-    {
-        printf("Posicao invalida!\n");
+        printf("Obrigado por jogar!\n");
+        break;
+    case 5:
+        printf("Obrigado por jogar!\n");
+        return 1;
+    default:
+        printf("Opcao invalida!\n");
         novoJogo();
     }
 }
