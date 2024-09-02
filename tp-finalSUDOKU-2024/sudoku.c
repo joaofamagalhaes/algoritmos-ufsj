@@ -190,6 +190,7 @@ int menuPrincipal()
     }
 }
 
+// funcao de "menu" a partir do jogo iniciado, da diversas opcoes ao jogador
 int novoJogo()
 {
     int resposta, linha, coluna, verif;
@@ -222,6 +223,10 @@ int novoJogo()
             printf("Posicao invalida!\n");
             novoJogo();
         }
+        break;
+    case 3:
+        resolucaoSudoku(0, 0);
+        imprimePuzzle();
         break;
     case 4:
         js = fopen("jogoSalvo.txt", "w");
