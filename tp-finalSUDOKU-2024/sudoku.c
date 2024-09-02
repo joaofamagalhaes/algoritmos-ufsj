@@ -176,7 +176,7 @@ int menuPrincipal()
             }
         }
         fclose(js);
-        5 novoJogo();
+        novoJogo();
         break;
     case 3:
         break;
