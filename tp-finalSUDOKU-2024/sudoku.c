@@ -12,7 +12,8 @@ void criaPuzzle();
 void imprimePuzzle();
 int ehValido();
 int resolucaoSudoku();
-int novoJogo();
+int menuJogo();
+int verificaSudoku();
 
 // inicializa um puzzle de forma aleatoria
 void criaPuzzle()
@@ -162,7 +163,7 @@ int menuPrincipal()
     switch (resposta)
     {
     case 1:
-        novoJogo();
+        menuJogo();
         break;
     case 2:
         js = fopen("jogoSalvo.txt", "r");
@@ -176,7 +177,7 @@ int menuPrincipal()
             }
         }
         fclose(js);
-        novoJogo();
+        menuJogo();
         break;
     case 3:
         break;
@@ -191,7 +192,7 @@ int menuPrincipal()
 }
 
 // funcao de "menu" a partir do jogo iniciado, da diversas opcoes ao jogador
-int novoJogo()
+int menuJogo()
 {
     int resposta, linha, coluna, verif;
 
@@ -215,15 +216,37 @@ int novoJogo()
         {
             printf("Digite o numero que deseja inserir: \n");
             scanf("%d", &resposta);
-            puzzle[linha][coluna] = resposta;
-            novoJogo();
+            if (resposta > 9 || resposta < 1)
+            {
+                printf("Numero invalido, digite um numero de 1 a 9!\n");
+                menuJogo();
+            }
+            else
+            {
+                puzzle[linha][coluna] = resposta;
+                menuJogo();
+            }
         }
         else
         {
             printf("Posicao invalida!\n");
-            novoJogo();
+            menuJogo();
         }
         break;
+
+    case 2:
+        verif = verificaSudoku();
+        if (verif)
+        {
+            printf("Parabens! Você completou o Sudoku corretamente!\n");
+        }
+        else
+        {
+            printf("O Sudoku ainda nao esta completo OU esta incorreto. Continue tentando!\n");
+        }
+        novoJogo();
+        break;
+
     case 3:
         resolucaoSudoku(0, 0);
         imprimePuzzle();
@@ -249,10 +272,26 @@ int novoJogo()
         return 1;
     default:
         printf("Opcao invalida!\n");
-        novoJogo();
+        menuJogo();
     }
 }
 
+// funcao que verifica as respostas do sudoku e da um retorno ao jogador
+int verificaSudoku()
+{
+    for (int i = 0; i < 9; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
+            int num = puzzle[i][j];
+            if (num == 0 || !ehValido(i, j, num))
+            {
+                return 0; // retorna 0 se o sudoku não estiver correto
+            }
+        }
+    }
+    return 1; // retorna 1 se o sudoku estiver correto
+}
 int main()
 {
     srand(time(NULL));
