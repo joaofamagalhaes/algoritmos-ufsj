@@ -1,22 +1,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 // se tratando das matrizes, cada i em loop é uma coluna enquanto cada j é uma linha //
 
 // declaracao de todas as funcoes e variaveis globais:
 int puzzle[9][9];
+int totalRecordes = 0;
 FILE *js;
+time_t tempoInicio, tempoFim; // variaveis para medir o tempo
 
-void criaPuzzle();
+// estrutura para guardar os nomes e o tempo (em segundos) de resolucao do puzzle
+typedef struct
+{
+    char nome[50];
+    int tempo;
+} Recordes;
+Recordes recordes[3];
+
+void criaPuzzle(int num);
 void imprimePuzzle();
 int ehValido();
 int resolucaoSudoku();
 int menuJogo();
 int verificaSudoku();
+void salvarTempos();
+void carregarTempos();
+void verificarSalvarRecorde();
 
 // inicializa um puzzle de forma aleatoria
-void criaPuzzle()
+void criaPuzzle(int num)
 {
 
     // inicia a matriz com 0s
@@ -31,24 +45,57 @@ void criaPuzzle()
     resolucaoSudoku(0, 0);
 
     // apaga alguns numeros, definindo a dificuldade
-    int dificuldade = rand() % 40 + 20;
-    for (int i = 1; i <= dificuldade; i++)
+    switch (num)
     {
-        int linha, coluna;
-        do
+    case 1:
+        for (int i = 1; i <= 54; i++)
         {
-            linha = rand() % 9;
-            coluna = rand() % 9;
+            int linha, coluna;
+            do
+            {
+                linha = rand() % 9;
+                coluna = rand() % 9;
 
-        } while (puzzle[linha][coluna] == 0);
-        puzzle[linha][coluna] = 0;
+            } while (puzzle[linha][coluna] == 0);
+            puzzle[linha][coluna] = 0;
+        }
+        break;
+    case 2:
+        for (int i = 1; i <= 63; i++)
+        {
+            int linha, coluna;
+            do
+            {
+                linha = rand() % 9;
+                coluna = rand() % 9;
+
+            } while (puzzle[linha][coluna] == 0);
+            puzzle[linha][coluna] = 0;
+        }
+
+        break;
+
+    case 3:
+        for (int i = 1; i <= 72; i++)
+        {
+            int linha, coluna;
+            do
+            {
+                linha = rand() % 9;
+                coluna = rand() % 9;
+
+            } while (puzzle[linha][coluna] == 0);
+            puzzle[linha][coluna] = 0;
+        }
+
+        break;
     }
 };
 
 // imprime o jogo de forma organizada e visivel no cmd
 void imprimePuzzle()
 {
-    printf("-------------------------------\n");
+    printf("\n-------------------------------\n");
 
     for (int i = 0; i < 9; i++)
     {
@@ -146,7 +193,7 @@ int resolucaoSudoku(int linha, int coluna)
 // funcao que imprime o menu principal e da as opcoes
 int menuPrincipal()
 {
-    int resposta;
+    int resposta, num;
 
     printf("\n                    MENU PRINCIPAL    \n");
     printf("            -------------------------------\n");
@@ -163,12 +210,19 @@ int menuPrincipal()
     switch (resposta)
     {
     case 1:
+        printf("Escolha o nivel de dificuldade:\n");
+        printf("1 - facil\n");
+        printf("2 - medio\n");
+        printf("3 - dificil\n");
+        scanf("%d", &num);
+        criaPuzzle(num);
+        tempoInicio = time(NULL);
         menuJogo();
         break;
     case 2:
         js = fopen("jogoSalvo.txt", "r");
         if (js == NULL)
-            printf("Não foi possivel abrir o jogo salvo!\n");
+            printf("Não foi possivel abrir o jogo salvo OU ele não existe!\n");
         for (int i = 0; i < 9; i++)
         {
             for (int j = 0; j < 9; j++)
@@ -177,6 +231,7 @@ int menuPrincipal()
             }
         }
         fclose(js);
+        tempoInicio = time(NULL);
         menuJogo();
         break;
     case 3:
@@ -186,7 +241,7 @@ int menuPrincipal()
         return 1;
         break;
     default:
-        printf("Opcao invalida!");
+        printf("Opcao invalida!\n\n");
         menuPrincipal();
     }
 }
@@ -195,14 +250,14 @@ int menuPrincipal()
 int menuJogo()
 {
     int resposta, linha, coluna, verif;
-
     imprimePuzzle();
 
-    printf("\n1 - Selecionar numero a ser preenchido\n");
-    printf("2 - Verificar\n");
-    printf("3 - Ver resultado\n");
-    printf("4 - Salvar jogo e sair\n");
-    printf("5 - Sair\n");
+    printf("\n\n1 - Selecionar numero a ser preenchido\n");
+    printf("2 - Remover numero\n");
+    printf("3 - Verificar\n");
+    printf("4 - Ver resultado\n");
+    printf("5 - Salvar jogo e sair\n");
+    printf("6 - Sair\n");
 
     scanf("%d", &resposta);
 
@@ -218,7 +273,7 @@ int menuJogo()
             scanf("%d", &resposta);
             if (resposta > 9 || resposta < 1)
             {
-                printf("Numero invalido, digite um numero de 1 a 9!\n");
+                printf("Numero invalido, digite um numero de 1 a 9!\n\n");
                 menuJogo();
             }
             else
@@ -229,29 +284,47 @@ int menuJogo()
         }
         else
         {
-            printf("Posicao invalida!\n");
+            printf("Posicao invalida!\n\n");
             menuJogo();
         }
         break;
 
     case 2:
+        printf("\nDigite a coluna e a linha que voce deseja remover: \n");
+        scanf("%d %d", &coluna, &linha);
+        if (puzzle[linha][coluna] != 0)
+        {
+            puzzle[linha][coluna] = 0;
+            menuJogo();
+        }
+        else
+        {
+            printf("Posicao invalida!\n\n");
+            menuJogo();
+        }
+        break;
+
+    case 3:
         verif = verificaSudoku();
         if (verif)
         {
-            printf("Parabens! Você completou o Sudoku corretamente!\n");
+            tempoFim = time(NULL);
+            int tempoDecorrido = (int)difftime(tempoFim, tempoInicio);
+            printf("Parabens! Voce completou o Sudoku corretamente em %d segundos!\n", tempoDecorrido);
+            verificarSalvarRecorde(tempoDecorrido);
         }
         else
         {
             printf("O Sudoku ainda nao esta completo OU esta incorreto. Continue tentando!\n");
         }
-        novoJogo();
+        menuJogo();
         break;
 
-    case 3:
+    case 4:
         resolucaoSudoku(0, 0);
         imprimePuzzle();
         break;
-    case 4:
+    case 5:
         js = fopen("jogoSalvo.txt", "w");
         if (js == NULL)
             printf("Não foi possivel salvar o jogo!\n");
@@ -267,16 +340,16 @@ int menuJogo()
 
         printf("Obrigado por jogar!\n");
         break;
-    case 5:
+    case 6:
         printf("Obrigado por jogar!\n");
         return 1;
     default:
-        printf("Opcao invalida!\n");
+        printf("Opcao invalida!\n\n");
         menuJogo();
     }
 }
 
-// funcao que verifica as respostas do sudoku e da um retorno ao jogador
+/// funcao que verifica as respostas do sudoku e da um retorno ao jogador
 int verificaSudoku()
 {
     for (int i = 0; i < 9; i++)
@@ -284,21 +357,104 @@ int verificaSudoku()
         for (int j = 0; j < 9; j++)
         {
             int num = puzzle[i][j];
-            if (num == 0 || !ehValido(i, j, num))
+            if (num != 0)
             {
-                return 0; // retorna 0 se o sudoku não estiver correto
+                puzzle[i][j] = 0; // temporariamente desabilita para verificacao
+                if (!ehValido(i, j, num))
+                {
+                    puzzle[i][j] = num; // restaura o valor original
+                    return 0;
+                }
+                puzzle[i][j] = num; // restaura o valor original
+            }
+            else
+            {
+                return 0; // caso tenha celulas vazias
             }
         }
     }
-    return 1; // retorna 1 se o sudoku estiver correto
+    return 1;
 }
+
+// funcao para carregar os melhores tempos de um arquivo
+void carregarTempos()
+{
+    FILE *file = fopen("tempos.txt", "r");
+    if (file == NULL)
+        return; // Se o arquivo nao existe, simplesmente sai
+
+    totalRecordes = 0; // redefine para carregar os dados
+    while (fscanf(file, "%s %d", recordes[totalRecordes].nome, &recordes[totalRecordes].tempo) != EOF && totalRecordes < 3)
+    {
+        totalRecordes++;
+    }
+    fclose(file);
+}
+
+// funcao para salvar os melhores tempos em um arquivo
+void salvarTempos()
+{
+    FILE *file = fopen("tempos.txt", "w");
+    for (int i = 0; i < totalRecordes; i++)
+    {
+        fprintf(file, "%s %d\n", recordes[i].nome, recordes[i].tempo);
+    }
+    fclose(file);
+}
+
+// funcao para exibir os melhores tempos
+void exibirMelhoresTempos()
+{
+    carregarTempos();
+    printf("Melhores tempos:\n");
+    for (int i = 0; i < totalRecordes; i++)
+    {
+        printf("%s - %d segundos\n", recordes[i].nome, recordes[i].tempo);
+    }
+}
+
+// funcao para verificar e salvar o tempo como recorde
+void verificarSalvarRecorde(int tempo)
+{
+    carregarTempos();
+
+    if (totalRecordes < 3 || tempo < recordes[totalRecordes - 1].tempo)
+    {
+        char nome[50];
+        printf("Novo recorde! Digite seu nome: ");
+        scanf("%s", nome);
+
+        // adiciona o novo recorde ao final
+        if (totalRecordes < 3)
+        {
+            totalRecordes++;
+        }
+        recordes[totalRecordes - 1].tempo = tempo;
+        strcpy(recordes[totalRecordes - 1].nome, nome);
+
+        // ordena os recordes
+        for (int i = 0; i < totalRecordes - 1; i++)
+        {
+            for (int j = i + 1; j < totalRecordes; j++)
+            {
+                if (recordes[i].tempo > recordes[j].tempo)
+                {
+                    Recordes temp = recordes[i];
+                    recordes[i] = recordes[j];
+                    recordes[j] = temp;
+                }
+            }
+        }
+
+        salvarTempos();
+    }
+}
+
 int main()
 {
     srand(time(NULL));
 
-    criaPuzzle();
     menuPrincipal();
-    // imprimePuzzle();
 
     return 0;
 }
